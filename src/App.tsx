@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// this is the main file for the journal application
+import React, {useState} from 'react';
+import JournalForm from './components/JournalForm';
+import JournalList from './components/JournalList';
+import {JournalEntry} from './types/JournalEntry';
 
-function App() {
+/**
+ * The main React component for the journal application.
+ * It manages the state of the journal entries and provides functionality to add, delete, and edit entries.
+ */
+const App: React.FC = () => {
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+
+  const addEntry = (entry: JournalEntry) => {
+    setEntries([...entries, entry]);
+  };
+
+  const deleteEntry = (id: number) => {
+    setEntries(entries.filter((entry) => entry.id !== id));
+  };
+
+  const editEntry = (entry: JournalEntry) => {
+    const updatedEntries = entries.map((e) => (e.id === entry.id ? entry : e));
+    setEntries(updatedEntries);
+  };
+
+
+  // TODO: Add edit functionality
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Personal Journal</h1>
+      <JournalForm onAddEntry={addEntry} />
+      <JournalList entries={entries} onDelete={deleteEntry} onEdit={editEntry} />
     </div>
   );
-}
+};
 
 export default App;
